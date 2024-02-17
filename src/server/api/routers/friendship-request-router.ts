@@ -170,6 +170,14 @@ export const friendshipRequestRouter = router({
               status: FriendshipStatusSchema.Values['accepted'],
             })
             .execute()
+        } else {
+          await t
+            .updateTable('friendships')
+            .where('userId', '=', input.friendUserId)
+            .where('friendUserId', '=', ctx.session.userId)
+            .where('status', '=', FriendshipStatusSchema.Values['requested'])
+            .set({ status: FriendshipStatusSchema.Values['accepted'] })
+            .execute()
         }
       })
     }),
